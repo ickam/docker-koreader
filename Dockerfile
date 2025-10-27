@@ -7,31 +7,6 @@ RUN \
     https://github.com/koreader/koreader/releases/download/${KOREADER_VERSION}/koreader-linux-${ARCH}-${KOREADER_VERSION}.tar.xz \
     && tar -xf koreader.tar.xz
 
-FROM ghcr.io/linuxserver/baseimage-selkies:fedora42@sha256:0c94340f6addc6c2e53b1cdd9bee074e8bbf2fd10b748fd62a465ca5f078837a AS fedora
-ENV \
-    HARDEN_DESKTOP=True \
-    HARDEN_OPENBOX=True \
-    NO_GAMEPAD=True \
-    SELKIES_FILE_TRANSFERS=upload,download \
-    SELKIES_GAMEPAD_ENABLED=False \
-    SELKIES_GAMEPAD_ENABLED=False \
-    SELKIES_UI_SIDEBAR_SHOW_FILES=True \
-    SELKIES_UI_SIDEBAR_SHOW_GAMEPADS=False \
-    SELKIES_UI_SIDEBAR_SHOW_SHARING=False \
-    SELKIES_MICROPHONE_ENABLED=False \
-    START_DOCKER=False \
-    TITLE="Koreader"
-RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
-    dnf install -y \
-    iputils \
-    # https://github.com/linuxserver/docker-baseimage-selkies/issues/100#issuecomment-3367806288
-    && echo -e "\ntrue" >> /etc/s6-overlay/s6-rc.d/init-selkies-config/run \
-    && sed -i 's|</applications>|  <application class="*">\n <fullscreen>yes</fullscreen>\n </application>\n</applications>|' /etc/xdg/openbox/rc.xml \
-    && echo koreader > /defaults/autostart
-COPY --from=curl /home/curl_user/bin/koreader /usr/bin/koreader
-COPY --from=curl /home/curl_user/lib/koreader /usr/lib/koreader
-COPY --from=curl /home/curl_user/share/pixmaps/koreader.png /usr/share/selkies/www/icon.png
-EXPOSE 3000
 
 FROM ghcr.io/linuxserver/baseimage-selkies:debiantrixie@sha256:dd91839ec839eb7be2c4d00d86f6d1bf5371b946cead9ff88f7930df2771c809 AS debian
 ENV \
@@ -63,4 +38,4 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 COPY --from=curl /home/curl_user/bin/koreader /usr/bin/koreader
 COPY --from=curl /home/curl_user/lib/koreader /usr/lib/koreader
 COPY --from=curl /home/curl_user/share/pixmaps/koreader.png /usr/share/selkies/www/icon.png
-EXPOSE 3000
+EXPOSE 5673
