@@ -5,9 +5,9 @@ services:
       context: . # Remove this line if you only use the image from the registry
       # target: fedora # Use this build stage if you use fedora-derivate distro
     ports:
-      - "3000-3001:3000-3001"
-    # volumes:
-    #   - ./volume/config:/config # Persistent storage
+      - "5673-5674:5673-5674"
+     volumes:
+       - /docker/koreader/config:/config # Persistent storage
     # # For hardware acceleration, check out the base image documentations:
     # # https://github.com/linuxserver/docker-baseimage-selkies?tab=readme-ov-file#dri3-gpu-acceleration
     # devices:
